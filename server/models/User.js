@@ -22,14 +22,39 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Password is required'],
       minlength: [6, 'Password must be at least 6 characters'],
-      // Never return password in queries by default
       select: false,
+    },
+    avatar: {
+      type: String,
+      default: '', // URL to profile picture or initial avatar generator
+    },
+    // --- Real-time Presence Status ---
+    isOnline: {
+      type: Boolean,
+      default: false,
+    },
+    socketId: {
+      type: String,
+      default: null,
+      index: {
+        unique: false,
+        sparse: true, // Only index records that have a socketId to save memory
+      },
+    },
+    lastActive: {
+      type: Date,
+      default: Date.now,
     },
   },
   {
-    timestamps: true, // Adds createdAt and updatedAt automatically
+    timestamps: true,
   }
 );
+
+// --- Indexing Strategy ---
+// Index email for ultra-fast unique lookups (implicitly created by unique: true)
+// Index on isOnline is useful for fetching lists of active/online collaborators
+userSchema.index({ isOnline: 1 });
 
 /**
  * Pre-save middleware: Hash the password before saving if it was modified.
