@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
+const roomRoutes = require('./routes/roomRoutes');
 const { errorHandler, notFound } = require('./middleware/errorMiddleware');
 
 // --- Initialize Express App ---
@@ -13,7 +14,7 @@ connectDB();
 
 // --- Core Middleware ---
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: true, // Dynamically allow request origin (supports any localhost port in development)
   credentials: true,
 }));
 app.use(express.json()); // Parse incoming JSON request bodies
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // --- API Routes ---
 app.use('/api/auth', authRoutes);
+app.use('/api/rooms', roomRoutes);
 
 // --- Health Check ---
 app.get('/api/health', (req, res) => {
