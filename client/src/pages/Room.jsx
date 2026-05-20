@@ -17,7 +17,7 @@ import { AvatarStack } from '../components/ui/Avatar';
  * Room — the core real-time file sharing workspace.
  */
 const Room = () => {
-  const { roomId } = useParams();
+  const { id: roomId } = useParams();
   const navigate = useNavigate();
   const [shareOpen, setShareOpen] = useState(false);
 

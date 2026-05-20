@@ -1,10 +1,13 @@
 require('dotenv').config();
 const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const roomRoutes = require('./routes/roomRoutes');
 const { errorHandler, notFound } = require('./middleware/errorMiddleware');
+const initializeSocket = require('./sockets/socketHandler');
 
 // --- Initialize Express App ---
 const app = express();
@@ -35,6 +38,20 @@ app.use(errorHandler);
 
 // --- Start Server ---
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: true,
+    credentials: true,
+  },
+});
+
+// Initialize Socket.io
+initializeSocket(io);
+
+// Expose io on app instance to access in other parts of the app if needed
+app.set('socketio', io);
+
+server.listen(PORT, () => {
   console.log(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
 });

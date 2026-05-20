@@ -3,7 +3,7 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import RoomPage from './pages/RoomPage';
+import Room from './pages/Room';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -23,7 +23,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/rooms" element={<Dashboard />} />
-          <Route path="/room/:id" element={<RoomPage />} />
+          <Route path="/room/:id" element={<Room />} />
           <Route path="/history" element={<Dashboard />} />
           <Route path="/settings" element={<Dashboard />} />
         </Route>
